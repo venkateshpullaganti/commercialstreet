@@ -10,4 +10,6 @@ def calculate():
 def say_hello(request):
     x = calculate()
     print(x)
-    return render(request, "hello.html",{"name":"Jarvis"})
+    
+    # Using the Django template to return html with the context object
+    return render(request, "hello.html",{"name":"Jarvis"}) 
