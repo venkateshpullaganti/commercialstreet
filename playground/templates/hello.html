@@ -8,4 +8,17 @@
 {% else %}
     <h1>Hello World..!</h1>
 {% endif%}
+<ul>
+    {% for product in products%}
+    <li>{{product.title}}</li>
+    {% endfor %}
+</ul>
+
+<h3>Customers</h3>
+<ul>
+    {% for customer in customers%}
+    <li>{{customer.first_name}}</li>
+    {% endfor %}
+</ul>
+
 </div>
