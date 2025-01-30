@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'playground',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'store',
     'tags',
     'likes'
@@ -83,7 +83,8 @@ DATABASES = {
         'NAME': "commercialstreet",
         'USER':'root',
         'HOST':'localhost',
-        'PASSWORD':'admin123'
+        'PASSWORD':'admin123',
+        'PORT': '3306',
     }
 }
 
