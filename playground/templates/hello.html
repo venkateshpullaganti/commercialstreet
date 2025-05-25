@@ -8,10 +8,24 @@
 {% else %}
     <h1>Hello World..!</h1>
 {% endif%}
+
+
+<h3>Aggregations</h3>
+<p>{{agg}}</p>
+
+<h3>Query Set</h3>
+<ul>
+    {% for item in query_set%}
+    <li>{{item.id}} ----> {{item.customer.first_name}} --> {{item.product.}}
+    </li>
+    {% endfor %}
+</ul>
+
+
 <h3>Products</h3>
 <ul>
     {% for product in products%}
-    <li>{{product.title}}</li>
+    <li>{{product.title}} ----> {{product.collection.title}}</li>
     {% endfor %}
 </ul>
 
@@ -19,6 +33,12 @@
 <ul>
     {% for customer in customers%}
     <li>{{customer.first_name}}</li>
+    {% endfor %}
+</ul>
+<h3>Colections</h3>
+<ul>
+    {% for collection in collections%}
+    <li>{{collection.title}}</li>
     {% endfor %}
 </ul>
 

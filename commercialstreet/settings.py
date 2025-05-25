@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse, resolve, Resolver404
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'playground',
-    # 'debug_toolbar',
+    'debug_toolbar',
     'store',
     'tags',
-    'likes'
+    'likes',
+    # 'debug_panel',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'debug_panel.middleware.DebugPanelMiddleware'
 ]
 
 ROOT_URLCONF = 'commercialstreet.urls'
@@ -85,7 +88,7 @@ DATABASES = {
         'HOST':'localhost',
         'PASSWORD':'admin123',
         'PORT': '3306',
-    }
+    }   
 }
 
 
