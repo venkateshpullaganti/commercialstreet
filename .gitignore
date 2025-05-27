@@ -1,0 +1,11 @@
+playground/__pycache__/views.cpython-312.pyc
+
+# Python cache files
+**/__pycache__/*
+**/*.py[cod]
+**/*$py.class
+
+
+^.*__pycache__/.*
+__pycache__/
+*.py[cod]

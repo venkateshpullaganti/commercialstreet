@@ -1,9 +1,15 @@
+
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models.aggregates import Count, Min, Max,Avg
-from django.db.models import Value,F
+from django.db.models.aggregates import Count, Min, Max,Avg,Sum
+from django.db.models import Value,F,Func, ExpressionWrapper, DecimalField
+from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 
-from store.models import Collection, Customer, Order, OrderItem, Product
+
+from store.models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product
+from tags.models import TaggedItem
 # Create your views here.
 
 
@@ -94,6 +100,96 @@ def say_hello(request):
     products = Product.objects.annotate(new_id=F('id')+1)[:10]
     for product in products:
         print(product.new_id)
+
+
+    ### Functions
+    # customers = Customer.objects.annotate(full_name= Func(F("first_name"),Value(" "),Func("last_name")),function="CONCAT")
+    # customers = Customer.objects.annotate(full_nam=Concat("first_name",Value(" "),"last_name"))
+
+    ### Grouping
+    # queryset = Customer.objects.annotate(count=Count("order"))
+
+
+    ### Expression Wrapper
+    # discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
+    # queryset = Product.objects.annotate(discounted_price=discounted_price)
+
+
+    ### Annotating Exercise
+    # Customers with their last order ID
+    # queryset = Customer.objects.annotate(last_order=Max('order__id'))
+    # All customers with their order
+    # queryset = OrderItem.objects.select_related('order').prefetch_related("order__customer").annotate(customer_id=F("order__customer__id"),placed_order_id=F("order__id"))
+
+    # Collections and count of their products
+    # queryset = Collection.objects.annotate(product_count=Count('product__id'))
+
+    # Customers with more than 5 orders
+    # queryset = Customer.objects.prefetch_related('order_set').annotate(total_orders=Count("order__id")).filter(total_orders__gte=5)
+
+    # Customers and the total amount they’ve spent
+    # queryset = Customer.objects.prefetch_related("order_set","order_set__orderitem_set__product").annotate(amount_spent=Sum(F("order__orderitem__product__unit_price") * F(orderitem__quantity))).order_by("-amount_spent")
+
+    # Top 5 best-selling products and their total sales
+    # revenue_contribution = ExpressionWrapper(F("unit_price")* F('total_orders'), output_field=DecimalField())
+    # queryset = Product.objects.prefetch_related("orderitem_set").annotate(total_orders=Count(F("orderitem__id"))).annotate(revenue_contribution=revenue_contribution).order_by("-total_orders")[:5]
+
+    ### Querying Generic Relationships
+
+    # Get the tags of a product
+    # product_id = 1
+    # content_type = ContentType.objects.get_for_model(Product)
+
+    # queryset = TaggedItem.objects.select_related('tag').filter(content_type=content_type, object_id=product_id)
+
+    ### Custom Manager
+    # queryset = TaggedItem.objects.get_tags_for(Product, 1)
+
+    ### Create object
+    # collection = Collection()
+    # collection.title = 'Video Games'
+    # collection.featured_product = Product(pk=1)
+    # collection.save()
+
+    ### Updating Objects
+    # Normal Update all fields
+    collection = Collection(pk=11)
+    collection.title = 'Games'
+    collection.featured_product = Product(pk=1)
+    collection.save()
+
+   # Update only specific field like below results in data loss of other columns
+    collection = Collection(pk=11)
+    # collection.title will be ''
+    collection.featured_product = Product(pk=1)
+    collection.save()
+
+    # recomended way
+    collection = Collection.objects.filter(pk=11)    # get data from db
+    collection.featured_product = Product(pk=1)     # update the required fields 
+    collection.save()                               # save 
+
+    # another way but this will be fragile as the keys featured_product will not be update 
+    Collection.objects.filter(pk=11).update(featured_product=None)
+
+    # Create a shopping cart with an item
+    cart = Cart()
+    cart.created_at=datetime.now() 
+    cart.save()
+
+    cartItem = CartItem()
+    cartItem.cart = cart
+    cartItem.product = Product(pk=1)
+    cartItem.save()
+
+    # Update the quantity of an item in a shopping cart
+    cartItem.quantity = 10
+    
+    # Remove a shopping cart with its items
+    cartItem = CartItem(pk=1)
+    cartItem.delete()
+
+
 
     # product_ids = list()
     # for product in products:

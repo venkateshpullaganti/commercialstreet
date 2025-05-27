@@ -14,13 +14,27 @@
 <p>{{agg}}</p>
 
 <h3>Query Set</h3>
-<ul>
-    {% for item in query_set%}
-    <li>{{item.id}} ----> {{item.customer.first_name}} --> {{item.product.}}
-    </li>
-    {% endfor %}
-</ul>
-
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>Product</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in query_set %}
+        <tr>
+            <td>{{item.id}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.total_orders}}</td>
+            <td>{{item.revenue_contribution}}</td>
+            <td>{{item.unit_price}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <h3>Products</h3>
 <ul>
