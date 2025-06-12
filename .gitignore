@@ -9,3 +9,6 @@ playground/__pycache__/views.cpython-312.pyc
 ^.*__pycache__/.*
 __pycache__/
 *.py[cod]
+store/__pycache__/models.cpython-312.pyc
+store/__pycache__/admin.cpython-312.pyc
+tags/__pycache__/admin.cpython-312.pyc

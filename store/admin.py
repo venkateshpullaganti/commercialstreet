@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import urlencode,format_html
 from django.urls import reverse
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 from . import models
 
@@ -93,10 +94,19 @@ class CollectionAdmin(admin.ModelAdmin):
             product_count=Count('product')
         )
 
+class OrderInlineItem(admin.TabularInline):
+    model = models.OrderItem
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    extra = 0
+    
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['customer']
     list_display = ['id', 'customer','placed_at','payment_status']
     list_select_related = ['customer']
+    inlines= [OrderInlineItem]
     ordering = ['customer']
-    autocomplete_fields = ['customer']
 
