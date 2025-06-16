@@ -1,18 +1,12 @@
-playground/__pycache__/views.cpython-312.pyc
-
-# Python cache files
-**/__pycache__/*
-**/*.py[cod]
-**/*$py.class
-
-
-^.*__pycache__/.*
-__pycache__/
+# Python cache directories and files
+*/__pycache__/*
 *.py[cod]
-store/__pycache__/models.cpython-312.pyc
-store/__pycache__/admin.cpython-312.pyc
-tags/__pycache__/admin.cpython-312.pyc
-commercialstreet/__pycache__/settings.cpython-312.pyc
-store/__pycache__/admin.cpython-312.pyc
-tags/__pycache__/admin.cpython-312.pyc
-tags/__pycache__/models.cpython-312.pyc
+*$py.class
+
+# Specific app cache directories
+store/__pycache__/
+playground/__pycache__/
+tags/__pycache__/
+commercialstreet/__pycache__/
+likes/__pycache__/
+store_custom/__pycache__/
