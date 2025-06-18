@@ -1,23 +1,64 @@
+import datetime
 from decimal import Decimal
 from rest_framework import serializers
 
 from store.models import Collection, Product
 
 
-class CollectionSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField(max_length=255)
+class CollectionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Collection
+        fields = ['id', 'title','products_count']
+
+    products_count = serializers.IntegerField()
+
+    # def count_products(self, collection:Collection):
+    #     return collection.aggregate.count()
 
 
 
-class ProductSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=255)
-    id = serializers.IntegerField()
-    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
-    price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price') # renamed field
+class ProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ['id', 'title','description', 'slug', 'inventory', 'unit_price', 'price_with_tax', 'collection']
+        # fields = '__all__' # bad practice - lazy dev
+
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')  # Custom field
 
-    # Serializing Relations
+    def calculate_tax(self, product:Product):
+        return product.unit_price * Decimal(1.1)
+    
+
+    # def create(self, validated_data):
+    #     product = Product(**validated_data)
+    #     product.last_update = datetime.time()
+    #     product.save()
+    #     return product
+    
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
+
+
+    # def validate(self, data):
+    #     if data['password'] != data['confirm_password']:
+    #         return serializers.ValidationError('Passwords do no match')
+    #     return data
+
+
+    # -------------------------------------------------------------------
+
+    # plain serialization notation
+
+    # title = serializers.CharField(max_length=255)
+    # id = serializers.IntegerField()
+    # unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    # price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price') # renamed field
+
+    # -------------------------------------------------------------------
+
+    # Serializing Relations : 4 ways
 
     # 1. Primary Key
     # collection = serializers.PrimaryKeyRelatedField(
@@ -60,10 +101,10 @@ class ProductSerializer(serializers.Serializer):
     # }
 
     # 4. Hyperlink
-    collection = serializers.HyperlinkedRelatedField(
-        queryset = Collection.objects.all(),
-        view_name='collection-detail' # Create a api with name collection-detail and the lookup field is pk in the url definition
-    )
+    # collection = serializers.HyperlinkedRelatedField(
+    #     queryset = Collection.objects.all(),
+    #     view_name='collection-detail' # Create a api with name collection-detail and the lookup field is pk in the url definition
+    # )
     # {
     #     "title": "7up Diet, 355 Ml",
     #     "id": 648,
@@ -73,5 +114,4 @@ class ProductSerializer(serializers.Serializer):
     #     "collection": "http://127.0.0.1:8000/store/collection/5/"
     # },
 
-    def calculate_tax(self, product:Product):
-        return product.unit_price * Decimal(1.1)
+    
