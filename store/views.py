@@ -5,24 +5,64 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from django.db.models.aggregates import Count
 
 from .models import Product,Collection
 from .serializers import CollectionSerializer, ProductSerializer
 
-# Create your views here.
-@api_view(['GET','POST'])
-def product_list(request):
-    if request.method == 'GET':
+
+class ProductList(APIView):
+    def get(self, request):
         queryset = Product.objects.select_related('collection').all() # To load the product and collections together
         serializer = ProductSerializer(queryset, many=True,context={'request':request})
         return Response(serializer.data)
-    elif request.method == 'POST':
+    
+    def post(self, request):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         # print(serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+class ProductDetails(APIView):
+    product:Product
+
+    def initial(self, request, id, *args, **kwargs):
+        product = get_object_or_404(Product,pk=id)
+        super().__init__(**kwargs)
+    
+    def get(self, request, id):
+        product = get_object_or_404(Product,pk=id)
+        serializer= ProductSerializer(product, context={'request':request})
+        return Response(serializer.data)
+    
+    def put(self, request, id):
+        product = get_object_or_404(Product,pk=id)
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+# # Create your views here.
+# @api_view(['GET','POST'])
+# def product_list(request):
+#     if request.method == 'GET':
+#         queryset = Product.objects.select_related('collection').all() # To load the product and collections together
+#         serializer = ProductSerializer(queryset, many=True,context={'request':request})
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = ProductSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         # print(serializer.validated_data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
      
 
 @api_view(['GET','PUT','DELETE'])
