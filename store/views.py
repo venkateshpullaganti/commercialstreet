@@ -11,8 +11,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet
 from django.db.models.aggregates import Count
 
-from .models import OrderItem, Product,Collection
-from .serializers import CollectionSerializer, ProductSerializer
+from .models import OrderItem, Product,Collection, Review
+from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -44,7 +44,16 @@ class CollectionViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class ReviewViewSet(ModelViewSet):
+    serializer_class = ReviewSerializer
 
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs['product_pk']}
+
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+    
+ 
 # class ProductList(ListCreateAPIView):
 
 #     #1. attributes
