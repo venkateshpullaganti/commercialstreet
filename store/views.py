@@ -1,7 +1,10 @@
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models.aggregates import Count
 
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,15 +12,32 @@ from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
-from django.db.models.aggregates import Count
+from rest_framework.pagination import PageNumberPagination
 
+from .pagination import DefaultPagination
+from .filters import ProductFilterSet
 from .models import OrderItem, Product,Collection, Review
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.select_related('collection').all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = ProductFilterSet
+    pagination_class = DefaultPagination
+    search_fields = ['title','description']
+    ordering_filelds = ['unit_price','last_update']
+
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        collection_id = self.request.query_params.get("collection_id")
+        if collection_id:
+            queryset = queryset.filter(collection_id=collection_id)
+        
+        return queryset 
 
     def get_serializer_context(self):
         return {'request':self.request}
