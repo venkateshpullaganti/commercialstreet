@@ -9,15 +9,16 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
+
 
 from .pagination import DefaultPagination
 from .filters import ProductFilterSet
-from .models import OrderItem, Product,Collection, Review
-from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
+from .models import Cart, OrderItem, Product,Collection, Review
+from .serializers import CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -47,6 +48,17 @@ class ProductViewSet(ModelViewSet):
             return Response( {"error":"Product cannot be deleted as it is associated with order item"} ,status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
         return self.destroy(request, *args, *kwargs)
+
+
+class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
+    serializer_class = CartSerializer
+
+    def get_serializer_context(self):
+        return {'reques':self.request }
+    
+    def get_queryset(self):
+        return Cart.objects.prefetch_related('items').filter(id=self.kwargs['pk'])
+
 
 
 
