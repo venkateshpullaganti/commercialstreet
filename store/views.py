@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin,DestroyModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
@@ -17,8 +17,8 @@ from rest_framework.pagination import PageNumberPagination
 
 from .pagination import DefaultPagination
 from .filters import ProductFilterSet
-from .models import Cart, OrderItem, Product,Collection, Review
-from .serializers import CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
+from .models import Cart, CartItem, OrderItem, Product,Collection, Review
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -50,16 +50,29 @@ class ProductViewSet(ModelViewSet):
         return self.destroy(request, *args, *kwargs)
 
 
-class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
+class CartItemViewSet(ModelViewSet):
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddCartItemSerializer
+        return CartItemSerializer
+
+    def get_serializer_context(self):
+        return {'cart_id':self.kwargs['cart_pk']}
+    
+    def get_queryset(self):
+        return CartItem.objects.select_related('product').filter(cart__id=self.kwargs['cart_pk'])
+
+
+
+class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericViewSet):
     serializer_class = CartSerializer
 
     def get_serializer_context(self):
         return {'reques':self.request }
     
     def get_queryset(self):
-        return Cart.objects.prefetch_related('items').filter(id=self.kwargs['pk'])
-
-
+        return Cart.objects.prefetch_related('items__product').filter(id=self.kwargs['pk'])
 
 
 class CollectionViewSet(ModelViewSet):
