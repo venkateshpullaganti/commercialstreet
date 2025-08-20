@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'playground',
     'debug_toolbar',
     'store',
-    'store_custom',
     'tags',
     'likes',
     'debug_panel',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +147,4 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+AUTH_USER_MODEL = 'core.User'
