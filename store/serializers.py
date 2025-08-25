@@ -2,7 +2,8 @@ import datetime
 from decimal import Decimal
 from rest_framework import serializers
 
-from store.models import Cart, CartItem, Collection, Product, Review
+from store.models import Cart, CartItem, Collection, Customer, Product, Review
+from store.permissions import IsAdminOrReadOnly
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -33,7 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product:Product):
         return product.unit_price * Decimal(1.1)
-    
+
 
 class ReviewSerializer(serializers.ModelSerializer):
 
@@ -57,13 +58,13 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def get_total_price(self, cartItem:CartItem):
         return cartItem.quantity * cartItem.product.unit_price
-    
 
-# Add new item to the cart 
+
+# Add new item to the cart
 # 1. Add post cartitem serializer & reurn based on the request type
-# 2. Pass id in the serializer context 
+# 2. Pass id in the serializer context
 # 3. Override the save method to handle save and update
-    
+
 class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
 
@@ -110,7 +111,14 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_total_price(self, cart:Cart):
         return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
-    
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Customer
+        fields = ['id', 'user_id', 'phone',"birth_date" ,"membership"]    
 
     # products = serializers.SerializerMethodField(method_name='cartitems')
 
@@ -199,5 +207,3 @@ class CartSerializer(serializers.ModelSerializer):
     #     "price_with_tax": 86.977,
     #     "collection": "http://127.0.0.1:8000/store/collection/5/"
     # },
-
-    
