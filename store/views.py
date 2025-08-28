@@ -6,7 +6,7 @@ from django.db.models.aggregates import Count
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly, IsAdminUser, IsAuthenticated
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin,DestroyModelMixin, UpdateModelMixin
@@ -14,7 +14,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
 
-from store.permissions import IsAdminOrReadOnly
+from store.permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewHistoryPermission
 
 
 from .pagination import DefaultPagination
@@ -106,6 +106,10 @@ class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     permission_classes = [IsAdminUser]
+
+    @action(detail=True, methods=["GET"], permission_classes=[ViewHistoryPermission])
+    def history(self, request,pk):
+        return Response("ok")
 
     @action(detail=False,methods=['GET','PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
