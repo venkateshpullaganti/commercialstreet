@@ -20,7 +20,7 @@ from store.permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, Vie
 from .pagination import DefaultPagination
 from .filters import ProductFilterSet
 from .models import Cart, CartItem, Customer, Order, OrderItem, Product,Collection, Review
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerialzer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer, OrderSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerialzer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer, OrderSerializer, UpdateOrderSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -113,7 +113,7 @@ class CustomerViewSet(ModelViewSet):
 
     @action(detail=False,methods=['GET','PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (customer,created) = Customer.objects.get_or_create(user_id=request.user.id)
+        customer = Customer.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -126,7 +126,12 @@ class CustomerViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    http_method_names = ['get','patch', 'post', 'delete', 'head', 'options']
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH','POST','DELETE']:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         user = self.request.user
@@ -140,6 +145,8 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerialzer
+        elif self.request.method == 'PATCH':
+            return UpdateOrderSerializer
         return OrderSerializer
     
     def create(self, request, *args, **kwargs):

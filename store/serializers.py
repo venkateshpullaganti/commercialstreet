@@ -2,6 +2,7 @@ import datetime
 from decimal import Decimal
 from django.db import transaction
 from rest_framework import serializers
+from store.signals import order_created
 
 
 from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, Review
@@ -151,7 +152,7 @@ class CreateOrderSerialzer(serializers.Serializer):
     def save(self, **kwargs):
         with transaction.atomic():
             cart_id = self.validated_data['cart_id']
-            (customer,created) = Customer.objects.get_or_create(user_id=self.context['user_id'])
+            customer = Customer.objects.get(user_id=self.context['user_id'])
             order = Order.objects.create(customer=customer)
 
             cart_items = CartItem.objects.select_related('product').filter(cart_id=cart_id)
@@ -165,7 +166,16 @@ class CreateOrderSerialzer(serializers.Serializer):
             ]
             OrderItem.objects.bulk_create(order_items)
             Cart.objects.get(id=cart_id).delete()
+            
+            order_created.send_robust(self.__class__, order=order)
             return order
+
+class UpdateOrderSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = Order
+        fields =  ['payment_status']
+
 
     # products = serializers.SerializerMethodField(method_name='cartitems')
 
