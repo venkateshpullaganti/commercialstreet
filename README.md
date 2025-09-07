@@ -175,7 +175,7 @@ Notes:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql', # your database
-            'NAME': 'storefront', # name of the db
+            'NAME': 'commercialstreet', # name of the db
             'HOST': 'localhost',  # where the db is running
             'USER': 'root',       # user name
             'PASSWORD': 'admin123'# user password

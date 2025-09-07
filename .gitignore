@@ -10,3 +10,5 @@ tags/__pycache__/
 commercialstreet/__pycache__/
 likes/__pycache__/
 store_custom/__pycache__/
+
+media/***/*/
