@@ -148,7 +148,7 @@ REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": False,
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
-    "DEFAULT_AUTHENTICATION_CLASSES": (
+     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
@@ -176,3 +176,18 @@ DJOSER = {
         "current_user": "core.serializers.UserSerializer",
     }
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
+
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 2525
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'admin@commercialstreet.com'
+ADMINS = [
+    ('Venkatesh', 'venkatesh@gmail.com'),
+]

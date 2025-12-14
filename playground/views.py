@@ -6,6 +6,8 @@ from django.db.models.aggregates import Count, Min, Max,Avg,Sum
 from django.db.models import Value,F,Func, ExpressionWrapper, DecimalField
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from django.core.mail import BadHeaderError, send_mail,mail_admins, EmailMessage
+from templated_mail.mail import BaseEmailMessage
 
 
 from store.models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product
@@ -62,7 +64,7 @@ def say_hello(request):
 
 
     ## Selected Related Fields
-    products = Product.objects.select_related("collection").all()
+    # products = Product.objects.select_related("collection").all()
     # products = Product.objects.select_related("collection__SomeOtherField").all() -> Will include that someOtherField that is related to the collection, product joins collection joins someOtherField
 
     # products = Product.objects.prefetch_related("promotions").select_related("collection").all()
@@ -92,14 +94,14 @@ def say_hello(request):
     # agg = Order.objects.select_related("customer").filter(customer__id=1).aggregate(customer_1=Count(id))
 
     # What is the min, max and average price of the products in collection 3?
-    agg = Product.objects.filter(collection_id=3).aggregate(min=Min('unit_price'),max=Max('unit_price'), average=Avg('unit_price'))
+    # agg = Product.objects.filter(collection_id=3).aggregate(min=Min('unit_price'),max=Max('unit_price'), average=Avg('unit_price'))
 
 
-    ## Anotations:
-    products = Product.objects.annotate(is_new=Value(True))
-    products = Product.objects.annotate(new_id=F('id')+1)[:10]
-    for product in products:
-        print(product.new_id)
+    # ## Anotations:
+    # products = Product.objects.annotate(is_new=Value(True))
+    # products = Product.objects.annotate(new_id=F('id')+1)[:10]
+    # for product in products:
+    #     print(product.new_id)
 
 
     ### Functions
@@ -153,41 +155,41 @@ def say_hello(request):
 
     ### Updating Objects
     # Normal Update all fields
-    collection = Collection(pk=11)
-    collection.title = 'Games'
-    collection.featured_product = Product(pk=1)
-    collection.save()
+#     collection = Collection(pk=11)
+#     collection.title = 'Games'
+#     collection.featured_product = Product(pk=1)
+#     collection.save()
 
-   # Update only specific field like below results in data loss of other columns
-    collection = Collection(pk=11)
-    # collection.title will be ''
-    collection.featured_product = Product(pk=1)
-    collection.save()
+#    # Update only specific field like below results in data loss of other columns
+#     collection = Collection(pk=11)
+#     # collection.title will be ''
+#     collection.featured_product = Product(pk=1)
+#     collection.save()
 
-    # recomended way
-    collection = Collection.objects.filter(pk=11)    # get data from db
-    collection.featured_product = Product(pk=1)     # update the required fields 
-    collection.save()                               # save 
+#     # recomended way
+#     collection = Collection.objects.filter(pk=11)    # get data from db
+#     collection.featured_product = Product(pk=1)     # update the required fields 
+#     collection.save()                               # save 
 
-    # another way but this will be fragile as the keys featured_product will not be update 
-    Collection.objects.filter(pk=11).update(featured_product=None)
+#     # another way but this will be fragile as the keys featured_product will not be update 
+#     Collection.objects.filter(pk=11).update(featured_product=None)
 
-    # Create a shopping cart with an item
-    cart = Cart()
-    cart.created_at=datetime.now() 
-    cart.save()
+#     # Create a shopping cart with an item
+#     cart = Cart()
+#     cart.created_at=datetime.now() 
+#     cart.save()
 
-    cartItem = CartItem()
-    cartItem.cart = cart
-    cartItem.product = Product(pk=1)
-    cartItem.save()
+#     cartItem = CartItem()
+#     cartItem.cart = cart
+#     cartItem.product = Product(pk=1)
+#     cartItem.save()
 
-    # Update the quantity of an item in a shopping cart
-    cartItem.quantity = 10
+#     # Update the quantity of an item in a shopping cart
+#     cartItem.quantity = 10
     
-    # Remove a shopping cart with its items
-    cartItem = CartItem(pk=1)
-    cartItem.delete()
+#     # Remove a shopping cart with its items
+#     cartItem = CartItem(pk=1)
+#     cartItem.delete()
 
 
 
@@ -201,5 +203,26 @@ def say_hello(request):
     # print([products_order.unit_price for products_order in products_orders])
 
     # Using the Django template to return html with the context object
-    return render(request, "hello.html",{"name":"Jarvis", "products": products, "customers":[], "collections":[], "query_set":[], 'agg':agg}) 
+    # return render(request, "hello.html",{"name":"Jarvis", "products": products, "customers":[], "collections":[], "query_set":[], 'agg':agg}) 
 
+
+
+    # Sending email
+    try:
+        # send_mail("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
+        # mail_admins("subject", "message", html_message="html message")
+
+        # Email with Attachments 
+        # message = EmailMessage("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
+        # message.attach_file("media/tanjiro.jpg")
+        # message.send()
+
+        # Templated Email
+        message = BaseEmailMessage(template_name="email/hello.html", context={"name":"Tanjiro"})
+        message.send(["tanjiro@gmail.com"])
+
+        
+    except BadHeaderError as e:
+        print(e)
+
+    return render(request, "hello.html")
