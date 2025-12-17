@@ -12,6 +12,10 @@ celery = "*"
 flower = "*"
 
 [dev-packages]
+djoser = "*"
+pytest = "*"
+pytest-django = "*"
+pytest-watch = "*"
 
 [requires]
 python_version = "3.12"

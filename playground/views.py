@@ -6,7 +6,7 @@ from django.db.models.aggregates import Count, Min, Max,Avg,Sum
 from django.db.models import Value,F,Func, ExpressionWrapper, DecimalField
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.core.mail import BadHeaderError, send_mail,mail_admins, EmailMessage
+from django.core.mail import  send_mail,mail_admins, EmailMessage
 from templated_mail.mail import BaseEmailMessage
 
 
