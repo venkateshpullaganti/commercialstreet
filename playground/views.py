@@ -10,6 +10,7 @@ from django.core.mail import BadHeaderError, send_mail,mail_admins, EmailMessage
 from templated_mail.mail import BaseEmailMessage
 
 
+from .tasks import notify_customers
 from store.models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product
 from tags.models import TaggedItem
 # Create your views here.
@@ -208,21 +209,23 @@ def say_hello(request):
 
 
     # Sending email
-    try:
-        # send_mail("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
-        # mail_admins("subject", "message", html_message="html message")
+    # try:
+    #     # send_mail("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
+    #     # mail_admins("subject", "message", html_message="html message")
 
-        # Email with Attachments 
-        # message = EmailMessage("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
-        # message.attach_file("media/tanjiro.jpg")
-        # message.send()
+    #     # Email with Attachments 
+    #     # message = EmailMessage("subject", "message", "commercialstreet@gmail.com", ["bob@gmail.com"])
+    #     # message.attach_file("media/tanjiro.jpg")
+    #     # message.send()
 
-        # Templated Email
-        message = BaseEmailMessage(template_name="email/hello.html", context={"name":"Tanjiro"})
-        message.send(["tanjiro@gmail.com"])
+    #     #Templated Email
+    # message = BaseEmailMessage(template_name="email/hello.html", context={"name":"Tanjiro"})
+    # message.send(["tanjiro123@gmail.com"])
 
         
-    except BadHeaderError as e:
-        print(e)
+    # except BadHeaderError as e:
+    #     print(e)
+
+    notify_customers.delay("hello world")
 
     return render(request, "hello.html")

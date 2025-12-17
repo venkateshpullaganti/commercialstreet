@@ -13,6 +13,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from django.urls import reverse, resolve, Resolver404
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -191,3 +192,14 @@ DEFAULT_FROM_EMAIL = 'admin@commercialstreet.com'
 ADMINS = [
     ('Venkatesh', 'venkatesh@gmail.com'),
 ]
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+
+CELERY_BEAT_SCHEDULE = {
+    'notify_customers':{
+        'task':'playground.tasks.notify_customers',
+        'schedule': 5,    # crontab(day_of_week=1,hour=7,minute=30), # crontab(minute='*/15')
+        'args':['hello world']
+    }
+}
