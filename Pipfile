@@ -10,6 +10,7 @@ django-debug-toolbar = "*"
 redis = "*"
 celery = "*"
 flower = "*"
+django-redis = "*"
 
 [dev-packages]
 djoser = "*"
@@ -19,7 +20,6 @@ pytest-watch = "*"
 model-bakery = "*"
 django-silk = "*"
 locust = "*"
-django-silk = "*"
 
 [requires]
 python_version = "3.12"

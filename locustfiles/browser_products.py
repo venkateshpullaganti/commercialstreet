@@ -26,6 +26,10 @@ class WebsiteUser(HttpUser):
             name='/store/cart/items', 
             json={'product_id':product_id, 'quantity':1}
         )
+
+    @task
+    def say_hello(self):
+        self.client.get("/playground/hello/")
     
     def on_start(self):
         response = self.client.post('/store/carts/')

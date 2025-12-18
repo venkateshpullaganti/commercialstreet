@@ -1,5 +1,6 @@
 
 import datetime
+from django.core.cache import cache
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models.aggregates import Count, Min, Max,Avg,Sum
@@ -7,6 +8,10 @@ from django.db.models import Value,F,Func, ExpressionWrapper, DecimalField
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.core.mail import  send_mail,mail_admins, EmailMessage
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+import requests
+from rest_framework.views import APIView
 from templated_mail.mail import BaseEmailMessage
 
 
@@ -16,6 +21,18 @@ from tags.models import TaggedItem
 # Create your views here.
 
 
+# Caching the views
+class HelloView(APIView):
+    @method_decorator(cache_page(5*60)) 
+    def get(request):
+        response = requests.get("https://httpbin.org/delay/2")
+        data = response.json()
+
+        return render(request, "hello.html", {"name":data})
+
+
+# caching the api fns
+@cache_page(5*60)
 def say_hello(request):
     # products = Product.objects.filter(collection__id=3)
     # customers = Customer.objects.filter(email__icontains='com')
@@ -226,6 +243,19 @@ def say_hello(request):
     # except BadHeaderError as e:
     #     print(e)
 
-    notify_customers.delay("hello world")
+    # Background Task 
+    # notify_customers.delay("hello world")
 
-    return render(request, "hello.html")
+    # Caching related
+    # Low level key caching 
+
+    # key='httpbin_result'
+    # if cache.get(key) is None:
+    #     response = requests.get("https://httpbin.org/delay/2")
+    #     data = response.json()
+    #     cache.set(key, data)
+
+    response = requests.get("https://httpbin.org/delay/2")
+    data = response.json()
+
+    return render(request, "hello.html", {"name":data})
