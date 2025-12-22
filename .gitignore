@@ -12,3 +12,5 @@ likes/__pycache__/
 store_custom/__pycache__/
 
 media/***/*/
+/static/
+general.log

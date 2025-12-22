@@ -13,6 +13,7 @@ from django.views.decorators.cache import cache_page
 import requests
 from rest_framework.views import APIView
 from templated_mail.mail import BaseEmailMessage
+import logging
 
 
 from .tasks import notify_customers
@@ -20,6 +21,7 @@ from store.models import Cart, CartItem, Collection, Customer, Order, OrderItem,
 from tags.models import TaggedItem
 # Create your views here.
 
+logger = logging.getLogger(__name__)
 
 # Caching the views
 class HelloView(APIView):
@@ -255,7 +257,11 @@ def say_hello(request):
     #     data = response.json()
     #     cache.set(key, data)
 
-    response = requests.get("https://httpbin.org/delay/2")
-    data = response.json()
-
+    try:
+        logger.info("Calling httpbin")
+        response = requests.get("https://httpbin.org/delay/2")
+        logger.info("httpbin response success")
+        data = response.json()
+    except requests.ConnectionError:
+        logger.critical("httpbin is offline")
     return render(request, "hello.html", {"name":data})

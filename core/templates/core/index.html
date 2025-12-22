@@ -1,0 +1,281 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commercial Street | Modern Bengaluru Fashion</title>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+
+    
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet"> -->
+    <!-- <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --accent: #ff4757; /* A modern vibrant poppy red */
+            --gray-light: #f8f9fa;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+        }
+
+        /* --- Stylish Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(to right, #fdfbfb 0%, #ebedee 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            line-height: 0.9;
+            margin: 0 0 20px 0;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 450px;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: var(--black);
+            color: var(--white);
+            padding: 15px 40px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+        }
+
+        /* --- Section Styling --- */
+        .section {
+            padding: 80px 8%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        /* --- Modern Product Cards --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--gray-light);
+            padding: 10px;
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .card:hover {
+            background: #f0f0f0;
+        }
+
+        .card-img {
+            aspect-ratio: 3/4;
+            background: #ddd;
+            width: 100%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-info h3 {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .price {
+            font-weight: 400;
+            color: #666;
+        }
+
+        /* --- Category Tags --- */
+        .tags {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tag {
+            padding: 8px 20px;
+            border: 1px solid var(--black);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tag:hover, .tag.active {
+            background: var(--black);
+            color: white;
+        }
+
+        footer {
+            padding: 60px 8%;
+            border-top: 1px solid var(--gray-medium);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3rem; }
+            .nav-links { display: none; }
+        }
+    </style> -->
+</head>
+<body>
+    <div class="home-page">
+        <img src="{% static 'core/logo.png' %}" alt="logo" class="logo"/>
+    </div>
+
+    <!-- <nav>
+        <div class="logo">Commercial Street</div>
+        
+        <div class="nav-links">
+            <a href="#">New Arrivals</a>
+            <a href="#">Designers</a>
+            <a href="#">Street Luxe</a>
+            <a href="#">Cart</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <p>EST. BENGALURU</p>
+            <h1>Style. <br>Refined.</h1>
+            <p>Experience the soul of Commercial Street curated for the modern wardrobe.</p>
+            <a href="#" class="btn-primary">Shop Collection</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <p style="color: var(--accent); font-weight: 600; margin-bottom: 5px;">COLLECTIONS</p>
+                <h2>Featured Edits</h2>
+            </div>
+            <a href="#" style="color: var(--black); text-decoration: underline;">View All</a>
+        </div>
+
+        <div class="tags">
+            <div class="tag active">All</div>
+            <div class="tag">Silver Jewelry</div>
+            <div class="tag">Menswear</div>
+            <div class="tag">Luxe Ethnic</div>
+        </div>
+
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img" style="background: url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                <div class="card-info">
+                    <h3>Oxidized Statement Set</h3>
+                    <span class="price">₹1,800</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img" style="background: url('https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                <div class="card-info">
+                    <h3>Silk Blend Sherwani</h3>
+                    <span class="price">₹12,500</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img" style="background: url('https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=500&q=80') center/cover;"></div>
+                <div class="card-info">
+                    <h3>Luxe Leather Footwear</h3>
+                    <span class="price">₹3,200</span>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <footer>
+        <p>&copy; 2024 COMMERCIAL STREET. Bengaluru's Heart, Your Style.</p>
+    </footer> -->
+
+</body>
+</html>
