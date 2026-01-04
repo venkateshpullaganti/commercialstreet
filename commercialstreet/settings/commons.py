@@ -17,19 +17,11 @@ from django.urls import reverse, resolve, Resolver404
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(l4x)1*&bb75121)!ou5q=a7-3=j19-%3wqy&a!r^6)8h&^a^='
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -90,21 +82,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'commercialstreet.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "commercialstreet",
-        'USER':'root',
-        'HOST':'localhost',
-        'PASSWORD':'admin123',
-        'PORT': '3306',
-    }   
-}
 
 
 # Password validation

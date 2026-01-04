@@ -12,6 +12,7 @@ celery = "*"
 flower = "*"
 django-redis = "*"
 whitenoise = "*"
+gunicorn = "==20.1.0"
 
 [dev-packages]
 djoser = "*"
