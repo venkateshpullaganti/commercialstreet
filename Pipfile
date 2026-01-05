@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "*"
 django-filter = "*"
+django-cors-headers = "*"
 mysqlclient = "*"
 django-debug-toolbar = "*"
 djangorestframework = "*"
