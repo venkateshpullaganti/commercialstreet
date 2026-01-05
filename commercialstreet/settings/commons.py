@@ -39,11 +39,9 @@ INSTALLED_APPS = [
     'djoser',
     'silk',
     'playground',
-    'debug_toolbar',
     'store',
     'tags',
     'likes',
-    'debug_panel',
     'core',
 ]
 
