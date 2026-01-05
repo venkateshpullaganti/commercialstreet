@@ -21,6 +21,7 @@ dj-database-url = "*"
 django-silk = "*"
 djoser = "*"
 django-templated-mail = "*"
+pillow = "*"
 django-debug-toolbar = "*"
 django-debug-panel = "*"
 
