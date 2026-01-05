@@ -21,11 +21,11 @@ dj-database-url = "*"
 django-silk = "*"
 djoser = "*"
 django-templated-mail = "*"
+django-debug-toolbar = "*"
+django-debug-panel = "*"
 
 [dev-packages]
 autopep8 = "*"
-django-debug-toolbar = "*"
-django-debug-panel = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-watch = "*"
