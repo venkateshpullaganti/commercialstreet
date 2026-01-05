@@ -14,3 +14,6 @@ store_custom/__pycache__/
 media/***/*/
 /static/
 general.log
+
+/db.sqlite3
+./celerybeat-schedule.db
